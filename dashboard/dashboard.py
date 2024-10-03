@@ -7,8 +7,8 @@ import seaborn as sns
 
 import plotly.express as px
 
-day_df = pd.read_csv('data\day.csv')
-hour_df = pd.read_csv('data\hour.csv')
+day_df = pd.read_csv('data/day.csv')
+hour_df = pd.read_csv('data/hour.csv')
 
 share_df = pd.merge(hour_df, day_df, on='dteday', how='left', suffixes=('_hour', '_day'))
 
