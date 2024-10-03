@@ -7,8 +7,8 @@ import seaborn as sns
 
 import plotly.express as px
 
-day_df = pd.read_csv('data/day.csv')
-hour_df = pd.read_csv('data/hour.csv')
+day_df = pd.read_csv('data\day.csv')
+hour_df = pd.read_csv('data\hour.csv')
 
 share_df = pd.merge(hour_df, day_df, on='dteday', how='left', suffixes=('_hour', '_day'))
 
@@ -138,70 +138,126 @@ st.markdown("<h3 style='text-align: center;'>Visualization & Explanatory Analysi
 st.markdown("- Pertanyaan 1: Apa saja keadaan yang mempengaruhi user menyewa sepeda ?")
 
 #Kode ini membuat boxplot untuk menganalisis pengaruh situasi cuaca terhadap total penyewaan sepeda. Visualisasi ini membantu mengidentifikasi distribusi dan outlier dalam data penyewaan berdasarkan kategori cuaca.
-fig = px.box(share_df, 
-             x='weathersit_day', 
-             y='cnt_day', 
-             title='Weather Situation vs Total Bike Rentals',
-             labels={'weathersit_day': 'Weather Situation', 'cnt_day': 'Total Rentals'})
+share_df['month'] = share_df['dteday'].dt.month
+share_df['year'] = share_df['dteday'].dt.year
 
-fig.update_layout(
+st.markdown("# Weather Situation vs Total Bike Rentals")
+
+month_options = ["All Months"] + list(range(1, 13))
+selected_month_weather = st.selectbox("Select Month for Weather Situation", month_options, key="weather_month")
+
+unique_years = share_df['year'].unique()
+selected_year_weather = st.selectbox("Select Year for Weather Situation", sorted(unique_years), key="weather_year")
+
+if selected_month_weather == "All Months":
+    filtered_df_weather = share_df[share_df['year'] == selected_year_weather]
+else:
+    filtered_df_weather = share_df[(share_df['month'] == selected_month_weather) & (share_df['year'] == selected_year_weather)]
+
+fig_weather = px.box(filtered_df_weather, 
+                     x='weathersit_day', 
+                     y='cnt_day', 
+                     title=f'Weather Situation vs Total Bike Rentals for {selected_month_weather}/{selected_year_weather}' if selected_month_weather != "All Months" else f'Weather Situation vs Total Bike Rentals for All Months in {selected_year_weather}',
+                     labels={'weathersit_day': 'Weather Situation', 'cnt_day': 'Total Rentals'})
+
+fig_weather.update_layout(
     xaxis_title='Weather Situation',
     yaxis_title='Total Rentals',
     template="plotly_white"
 )
 
-st.plotly_chart(fig)
+st.plotly_chart(fig_weather)
 
 #Kode ini membuat scatter plot untuk menunjukkan hubungan antara suhu dan total penyewaan sepeda untuk membantu menganalisis dampak suhu terhadap penyewaan sepeda.
-fig = px.scatter(share_df, 
-                 x='temp_day', 
-                 y='cnt_day', 
-                 color_discrete_sequence=['red'],
-                 title='Temperature vs Total Bike Rentals',
-                 labels={'temp_day': 'Temperature (normalized)', 'cnt_day': 'Total Rentals'})
+share_df['month'] = share_df['dteday'].dt.month
+share_df['year'] = share_df['dteday'].dt.year
 
-fig.update_layout(
+st.markdown("# Temperature vs Total Bike Rentals")
+
+month_options = ["All Months"] + list(range(1, 13))
+selected_month_temperature = st.selectbox("Select Month for Temperature", month_options, key="temperature_month")
+
+unique_years = share_df['year'].unique()
+selected_year_temperature = st.selectbox("Select Year for Temperature", sorted(unique_years), key="temperature_year")
+
+if selected_month_temperature == "All Months":
+    filtered_df_temperature = share_df[share_df['year'] == selected_year_temperature]
+else:
+    filtered_df_temperature = share_df[(share_df['month'] == selected_month_temperature) & (share_df['year'] == selected_year_temperature)]
+
+fig_temperature = px.scatter(filtered_df_temperature, 
+                              x='temp_day', 
+                              y='cnt_day', 
+                              color_discrete_sequence=['red'],
+                              title=f'Temperature vs Total Bike Rentals for {selected_month_temperature}/{selected_year_temperature}' if selected_month_temperature != "All Months" else f'Temperature vs Total Bike Rentals for All Months in {selected_year_temperature}',
+                              labels={'temp_day': 'Temperature (normalized)', 'cnt_day': 'Total Rentals'})
+
+fig_temperature.update_layout(
     xaxis_title='Temperature (normalized)',
     yaxis_title='Total Rentals',
     template="plotly_white"
 )
 
-st.plotly_chart(fig)
+st.plotly_chart(fig_temperature)
 
 #Kode ini membuat scatter plot yang menunjukkan hubungan antara kelembaban dan total penyewaan sepeda untuk menganalisis pengaruh kelembaban terhadap penggunaan sepeda.
-import plotly.express as px
 
-fig = px.scatter(share_df, 
-                 x='hum_day', 
-                 y='cnt_day', 
-                 color_discrete_sequence=['green'],
-                 title='Humidity vs Total Bike Rentals',
-                 labels={'hum_day': 'Humidity (normalized)', 'cnt_day': 'Total Rentals'})
+share_df['month'] = share_df['dteday'].dt.month
+share_df['year'] = share_df['dteday'].dt.year
 
-fig.update_layout(
+st.markdown("# Humidity vs Total Bike Rentals")
+
+month_options = ["All Months"] + list(range(1, 13))
+selected_month_humidity = st.selectbox("Select Month for Humidity", month_options, key="humidity_month")
+
+unique_years = share_df['year'].unique()
+selected_year_humidity = st.selectbox("Select Year for Humidity", sorted(unique_years), key="humidity_year")
+
+if selected_month_humidity == "All Months":
+    filtered_df_humidity = share_df[share_df['year'] == selected_year_humidity]
+else:
+    filtered_df_humidity = share_df[(share_df['month'] == selected_month_humidity) & (share_df['year'] == selected_year_humidity)]
+
+fig_humidity = px.scatter(filtered_df_humidity, 
+                           x='hum_day', 
+                           y='cnt_day', 
+                           color_discrete_sequence=['green'],
+                           title=f'Humidity vs Total Bike Rentals for {selected_month_humidity}/{selected_year_humidity}' if selected_month_humidity != "All Months" else f'Humidity vs Total Bike Rentals for All Months in {selected_year_humidity}',
+                           labels={'hum_day': 'Humidity (normalized)', 'cnt_day': 'Total Rentals'})
+
+fig_humidity.update_layout(
     xaxis_title='Humidity (normalized)',
     yaxis_title='Total Rentals',
     template="plotly_white"
 )
 
-st.plotly_chart(fig)
+st.plotly_chart(fig_humidity)
 
-st.markdown("- Pertanyaan 2: Apakah weekday atau workday mempegaruhi penyewaan sepeda ?")
+st.write("###")
+st.markdown("- Pertanyaan 2: Apakah weekday atau workday mempegaruhi penyewaan sepeda?")
 
-#Kode ini menghasilkan boxplot untuk menganalisis perbandingan total penyewaan sepeda berdasarkan hari dalam seminggu.
-fig = px.box(share_df, 
-             x='weekday_hour', 
-             y='cnt_day', 
-             title='Weekday vs Total Bike Rentals',
-             labels={'weekday_hour': 'Day of the Week (0 = Sunday, 6 = Saturday)', 'cnt_day': 'Total Rentals'})
+selected_month_weekday = st.selectbox("Select Month for Weekday", month_options, key="weekday_month")
 
-fig.update_layout(
+selected_year_weekday = st.selectbox("Select Year for Weekday", sorted(unique_years), key="weekday_year")
+
+if selected_month_weekday == "All Months":
+    filtered_df_weekday = share_df[share_df['year'] == selected_year_weekday]
+else:
+    filtered_df_weekday = share_df[(share_df['month'] == selected_month_weekday) & (share_df['year'] == selected_year_weekday)]
+
+fig_weekday = px.box(filtered_df_weekday, 
+                     x='weekday_hour', 
+                     y='cnt_day', 
+                     title=f'Weekday vs Total Bike Rentals for {selected_month_weekday}/{selected_year_weekday}' if selected_month_weekday != "All Months" else f'Weekday vs Total Bike Rentals for All Months in {selected_year_weekday}',
+                     labels={'weekday_hour': 'Day of the Week (0 = Sunday, 6 = Saturday)', 'cnt_day': 'Total Rentals'})
+
+fig_weekday.update_layout(
     xaxis_title='Day of the Week (0 = Sunday, 6 = Saturday)',
     yaxis_title='Total Rentals',
     template="plotly_white"
 )
 
-st.plotly_chart(fig)
+st.plotly_chart(fig_weekday)
 
 st.markdown("<h3 style='text-align: center;'>Insight for Exploratory Data Analysis (EDA)</h3>", unsafe_allow_html=True)
 st.markdown("- Berdasarkan dataset, dihasilkan bahwa eather 1 merupakan keadaan cuaca yang paling tinggi peminat dalam bike sharing ini. begitu juga dengan temperatur, dimana 0.6 merupakan temperatur yang paling disukai untuk bike sharing. sama halnya dengan humidity, dimana 0.6 merupakan humidity yang paling disukai untuk user")
