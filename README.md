@@ -21,4 +21,4 @@ Projek ini merupakan tugas proyek akhir dari kelas Belajar Analisis Data dengan 
 2. Install requirements
    pip install -r requirements.txt
 3. Run
-   streamlit run dashboard.py
+   streamlit run dashboard/dashboard.py
